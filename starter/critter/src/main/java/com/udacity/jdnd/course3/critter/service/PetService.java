@@ -4,6 +4,7 @@ package com.udacity.jdnd.course3.critter.service;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.service.exception.PetNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class PetService {
     }
 
     public Pet getPetById(Long petId) {
-        return petRepository.findById(petId).get();
+        return petRepository.findById(petId).orElseThrow(PetNotFoundException::new);
     }
 
     public List<Pet> getAllPets(){

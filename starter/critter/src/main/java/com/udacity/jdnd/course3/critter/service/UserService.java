@@ -6,6 +6,7 @@ import com.udacity.jdnd.course3.critter.dto.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
@@ -40,17 +41,18 @@ public class UserService {
     }
 
     public Employee getEmployeeById(Long employeeId) {
-        return employeeRepository.findById(employeeId).get();
+        return employeeRepository.findById(employeeId).orElseThrow(UserNotFoundException::new);
     }
 
-
-
     public Customer getCustomerById(Long customerId) {
-        return customerRepository.findById(customerId).get();
+        return customerRepository.findById(customerId).orElseThrow(UserNotFoundException::new);
     }
 
     public void setAvailability(Set<DayOfWeek> daysAvailable, Long employeeId) {
-        employeeRepository.getOne(employeeId).setDaysAvailable(daysAvailable);
+
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(UserNotFoundException::new);
+        employee.setDaysAvailable(daysAvailable);
+        employeeRepository.save(employee);
     }
 
     public List<Employee> findEmployeesForService(EmployeeRequestDTO employeeRequestDTO) {
